@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raio-X da Minha SOMP — SOS da SOP</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,300;1,500&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --vinho: #7D1C2E;
+  --vinho2: #A32840;
+  --vinho3: #C94060;
+  --rose: #F5D6DC;
+  --rose2: #FDF0F3;
+  --creme: #FDF7F4;
+  --creme2: #F5EDE8;
+  --ouro: #C9956A;
+  --ouro2: #E8C4A0;
+  --dark: #2A0F16;
+  --muted: rgba(42,15,22,0.55);
+  --white: #FFFFFF;
+  --green: #1E6B3F;
+  --green2: #E8F5EE;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--creme);color:var(--dark);overflow-x:hidden}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(160deg,#5A0F1E 0%,#7D1C2E 45%,#A32840 80%,#8B2035 100%);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:4rem 1.5rem 5rem;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 20% 50%,rgba(201,149,106,.15) 0%,transparent 55%),
+             radial-gradient(ellipse at 80% 20%,rgba(245,214,220,.08) 0%,transparent 50%);
+}
+.hero::after{
+  content:'';position:absolute;bottom:-2px;left:0;right:0;height:70px;
+  background:var(--creme);clip-path:ellipse(55% 100% at 50% 100%);
+}
+
+.hero-badge{
+  display:inline-block;border:1px solid rgba(255,255,255,.3);
+  color:rgba(255,255,255,.85);font-size:11px;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;
+  padding:6px 20px;border-radius:30px;margin-bottom:1.5rem;
+  background:rgba(255,255,255,.1);position:relative;
+}
+
+.hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.8rem,8vw,5.5rem);
+  font-weight:700;color:#fff;line-height:1.05;
+  margin-bottom:.75rem;position:relative;
+}
+.hero h1 em{font-style:italic;font-weight:300;color:var(--ouro2);display:block;}
+
+.hero-sub{
+  font-size:clamp(15px,2.5vw,18px);color:rgba(255,255,255,.72);
+  max-width:560px;line-height:1.75;margin:0 auto 2.5rem;position:relative;
+}
+
+.hero-scroll{color:rgba(255,255,255,.3);font-size:22px;animation:bounce 2s ease-in-out infinite;position:relative;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+
+/* ── QUIZ ENGINE ── */
+.quiz-section{background:var(--creme);padding:4rem 1.5rem;}
+.container{max-width:720px;margin:0 auto;}
+
+.progress-wrap{margin-bottom:2rem;}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin-bottom:.5rem;}
+.progress-bar{height:5px;background:rgba(125,28,46,.12);border-radius:10px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--vinho),var(--ouro));border-radius:10px;transition:width .4s ease;}
+
+.q-step{display:none;animation:fadeUp .4s ease;}
+.q-step.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.q-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ouro);margin-bottom:.5rem;}
+.q-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,4vw,2rem);font-weight:700;color:var(--vinho);margin-bottom:.4rem;line-height:1.2;}
+.q-sub{font-size:14px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;}
+
+.options-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:1.75rem;}
+.opt{
+  background:#fff;border:2px solid var(--rose);border-radius:14px;
+  padding:1rem 1.25rem;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:12px;
+  font-family:'Nunito',sans-serif;text-align:left;
+}
+.opt:hover{border-color:var(--vinho3);background:var(--rose2);transform:translateX(4px);}
+.opt.selected{border-color:var(--vinho2);background:var(--rose2);box-shadow:0 4px 16px rgba(125,28,46,.12);}
+.opt .opt-icon{font-size:1.4rem;flex-shrink:0;}
+.opt .opt-text h4{font-size:14px;font-weight:700;color:var(--vinho);margin-bottom:2px;}
+.opt .opt-text p{font-size:12.5px;color:var(--muted);line-height:1.5;}
+.opt .opt-check{
+  width:22px;height:22px;border-radius:50%;border:2px solid var(--rose);
+  flex-shrink:0;margin-left:auto;display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:#fff;transition:all .2s;
+}
+.opt.selected .opt-check{background:var(--vinho2);border-color:var(--vinho2);}
+
+.btn-next{
+  width:100%;padding:.9rem;border-radius:14px;
+  background:var(--vinho2);color:#fff;border:none;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;
+  cursor:pointer;transition:all .2s;
+}
+.btn-next:hover{background:var(--vinho);transform:translateY(-2px);box-shadow:0 8px 24px rgba(125,28,46,.25);}
+.btn-next:disabled{background:rgba(125,28,46,.3);cursor:not-allowed;transform:none;box-shadow:none;}
+
+.btn-back{
+  background:none;border:none;color:var(--muted);
+  font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;padding:.5rem 0;margin-bottom:.75rem;
+  display:flex;align-items:center;gap:6px;transition:color .2s;
+}
+.btn-back:hover{color:var(--vinho);}
+
+/* ── RESULT ── */
+.result-section{display:none;background:var(--creme);padding:2rem 1.5rem 4rem;}
+.result-section.show{display:block;animation:fadeUp .5s ease;}
+
+.result-hero{
+  background:linear-gradient(160deg,#5A0F1E,#A32840);
+  border-radius:24px;padding:2.5rem 2rem;text-align:center;
+  margin-bottom:2rem;position:relative;overflow:hidden;
+}
+.result-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(201,149,106,.12),transparent 65%);
+}
+.result-badge{
+  display:inline-block;background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.85);
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  padding:5px 16px;border-radius:20px;margin-bottom:1rem;position:relative;
+}
+.result-hero h2{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5vw,3rem);
+  font-weight:700;color:#fff;margin-bottom:.5rem;position:relative;
+  line-height:1.15;
+}
+.result-hero h2 em{color:var(--ouro2);font-style:italic;}
+.result-hero p{font-size:15px;color:rgba(255,255,255,.72);line-height:1.7;max-width:480px;margin:0 auto;position:relative;}
+
+/* Result cards */
+.result-card{
+  background:#fff;border-radius:20px;border:1px solid var(--rose);
+  padding:1.5rem;margin-bottom:1rem;
+}
+.rc-head{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.rc-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.rc-head h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--vinho);}
+.rc-head .rc-sub{font-size:12px;color:var(--muted);}
+
+.rc-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.rc-list li{
+  font-size:13.5px;color:var(--dark);padding:.6rem .9rem;
+  background:var(--creme2);border-radius:10px;
+  display:flex;gap:8px;align-items:flex-start;line-height:1.5;
+}
+.rc-list li::before{content:attr(data-icon);flex-shrink:0;}
+
+/* Modules section */
+.modules-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;
+  color:var(--vinho);text-align:center;margin-bottom:.5rem;
+}
+.modules-sub{font-size:14px;color:var(--muted);text-align:center;margin-bottom:1.5rem;line-height:1.6;}
+
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:2rem;}
+
+.mod-card{
+  background:#fff;border:1.5px solid var(--rose);border-radius:16px;
+  padding:1.2rem;transition:all .2s;position:relative;overflow:hidden;
+}
+.mod-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--vinho2),var(--ouro));
+}
+.mod-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(125,28,46,.1);border-color:var(--vinho3);}
+.mod-icon{font-size:1.5rem;margin-bottom:.5rem;display:block;}
+.mod-card h4{font-size:13px;font-weight:800;color:var(--vinho);margin-bottom:.3rem;line-height:1.3;}
+.mod-card p{font-size:12px;color:var(--muted);line-height:1.6;}
+.mod-tag{
+  display:inline-block;font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:10px;margin-top:.5rem;
+  background:var(--rose2);color:var(--vinho2);
+}
+
+/* CTA section */
+.cta-box{
+  background:linear-gradient(135deg,#5A0F1E,#A32840);
+  border-radius:24px;padding:2.5rem 2rem;text-align:center;
+  margin-top:1.5rem;position:relative;overflow:hidden;
+}
+.cta-box::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(201,149,106,.15),transparent 65%);
+}
+.cta-box h2{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2.5rem);
+  font-weight:700;color:#fff;margin-bottom:.5rem;position:relative;line-height:1.2;
+}
+.cta-box h2 em{font-style:italic;color:var(--ouro2);}
+.cta-box p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.7;max-width:460px;margin:0 auto 2rem;position:relative;}
+
+.btn-cta{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--ouro),#B8845A);
+  color:var(--dark);font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;
+  padding:1.1rem 2.5rem;border-radius:50px;text-decoration:none;
+  transition:all .25s;box-shadow:0 8px 30px rgba(201,149,106,.4);
+  position:relative;
+}
+.btn-cta:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(201,149,106,.55);}
+
+.cta-note{font-size:12px;color:rgba(255,255,255,.4);margin-top:1rem;position:relative;}
+
+/* Guarantee */
+.guarantee{
+  display:flex;align-items:center;gap:12px;
+  background:var(--green2);border:1px solid #A8D8BC;
+  border-radius:14px;padding:1rem 1.2rem;margin-top:1.25rem;
+}
+.guarantee .g-icon{font-size:1.5rem;flex-shrink:0;}
+.guarantee p{font-size:13px;color:var(--green);line-height:1.6;}
+.guarantee p strong{font-weight:700;}
+
+/* Tip box */
+.tip-box{
+  background:rgba(201,149,106,.08);border-left:3px solid var(--ouro);
+  border-radius:0 12px 12px 0;padding:1rem 1.2rem;
+  font-size:13px;color:var(--dark);line-height:1.65;margin:1rem 0;
+}
+.tip-box strong{color:var(--vinho);font-weight:700;}
+
+/* Footer */
+.footer{
+  background:var(--vinho);text-align:center;
+  padding:2rem 1rem;font-size:12px;color:rgba(255,255,255,.45);
+}
+.footer strong{color:var(--ouro2);}
+
+@media(max-width:520px){
+  .modules-grid{grid-template-columns:1fr;}
+  .opt{padding:.85rem 1rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">SOS da SOP · Nutri Nívea Pessôa</div>
+  <h1>Raio-X da<br><em>Minha SOMP</em></h1>
+  <p style="font-size:12px;color:rgba(255,255,255,.5);margin-top:-.5rem;margin-bottom:1rem;position:relative;letter-spacing:.5px;">a antiga SOP</p>
+  <p class="hero-sub">Responda algumas perguntas rápidas e descubra o seu fenótipo de SOMP — o que pode estar causando seus sintomas e exatamente por onde começar.</p>
+  <div class="hero-scroll">↓</div>
+</section>
+
+<!-- QUIZ -->
+<section class="quiz-section" id="quiz">
+  <div class="container">
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progressText">Pergunta 1 de 5</span>
+        <span id="progressPct">20%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-step active" id="q1">
+      <div class="q-label">Passo 1</div>
+      <h2 class="q-title">Como é o seu ciclo menstrual?</h2>
+      <p class="q-sub">Escolha a opção que mais representa o que você vive no dia a dia.</p>
+      <div class="options-grid">
+        <button class="opt" onclick="selectOpt(this,'q1','irregular')">
+          <span class="opt-icon">📅</span>
+          <div class="opt-text"><h4>Irregular ou imprevisível</h4><p>Vem quando quer, nunca sei quando vai aparecer</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q1','ausente')">
+          <span class="opt-icon">❌</span>
+          <div class="opt-text"><h4>Ausente (amenorreia)</h4><p>Fica meses sem menstruar ou vem muito raramente</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q1','intenso')">
+          <span class="opt-icon">🩸</span>
+          <div class="opt-text"><h4>Presente mas com fluxo muito intenso</h4><p>Vem, mas o sangramento é excessivo e com muita cólica</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q1','regular')">
+          <span class="opt-icon">✅</span>
+          <div class="opt-text"><h4>Relativamente regular</h4><p>Vem todo mês, mas tenho outros sintomas de SOP</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+      </div>
+      <button class="btn-next" id="btn-q1" disabled onclick="nextStep(2)">Próxima →</button>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-step" id="q2">
+      <button class="btn-back" onclick="prevStep(1)">← Voltar</button>
+      <div class="q-label">Passo 2</div>
+      <h2 class="q-title">Quais sintomas de andrógeno você tem?</h2>
+      <p class="q-sub">Andrógenos são os hormônios masculinos que ficam elevados na SOP. Pode marcar mais de um.</p>
+      <div class="options-grid">
+        <button class="opt" onclick="selectOpt(this,'q2','acne')">
+          <span class="opt-icon">😔</span>
+          <div class="opt-text"><h4>Acne e pele muito oleosa</h4><p>Especialmente no queixo, mandíbula e costas</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q2','pelos')">
+          <span class="opt-icon">💇</span>
+          <div class="opt-text"><h4>Pelos no rosto ou corpo em excesso</h4><p>Buço, queixo, barriga, peito</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q2','queda')">
+          <span class="opt-icon">😰</span>
+          <div class="opt-text"><h4>Queda de cabelo</h4><p>Afinamento dos fios, calvície feminina</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q2','nenhum')">
+          <span class="opt-icon">🙅</span>
+          <div class="opt-text"><h4>Nenhum desses</h4><p>Não tenho sinais visíveis de excesso de andrógenos</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+      </div>
+      <button class="btn-next" id="btn-q2" disabled onclick="nextStep(3)">Próxima →</button>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-step" id="q3">
+      <button class="btn-back" onclick="prevStep(2)">← Voltar</button>
+      <div class="q-label">Passo 3</div>
+      <h2 class="q-title">Como você se sente no dia a dia?</h2>
+      <p class="q-sub">Escolha o que mais te representa. Pode marcar mais de um.</p>
+      <div class="options-grid">
+        <button class="opt" onclick="selectOpt(this,'q3','ri')">
+          <span class="opt-icon">🍬</span>
+          <div class="opt-text"><h4>Vontade de doce e cansaço após comer</h4><p>Especialmente depois de refeições com carboidrato</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q3','peso')">
+          <span class="opt-icon">⚖️</span>
+          <div class="opt-text"><h4>Dificuldade de emagrecer mesmo fazendo dieta</h4><p>Parece que nada funciona, principalmente na barriga</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q3','cansaco')">
+          <span class="opt-icon">😴</span>
+          <div class="opt-text"><h4>Cansaço extremo sem motivo</h4><p>Acordo cansada, sem energia ao longo do dia</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q3','humor')">
+          <span class="opt-icon">😰</span>
+          <div class="opt-text"><h4>Ansiedade e mudanças de humor constantes</h4><p>Irritabilidade, TPM intensa, choro fácil</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+      </div>
+      <button class="btn-next" id="btn-q3" disabled onclick="nextStep(4)">Próxima →</button>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-step" id="q4">
+      <button class="btn-back" onclick="prevStep(3)">← Voltar</button>
+      <div class="q-label">Passo 4</div>
+      <h2 class="q-title">Você tem algum diagnóstico associado?</h2>
+      <p class="q-sub">Se ainda não fez exames, escolha o que mais suspeita baseado nos seus sintomas.</p>
+      <div class="options-grid">
+        <button class="opt" onclick="selectOpt(this,'q4','ri_diag')">
+          <span class="opt-icon">🔬</span>
+          <div class="opt-text"><h4>Resistência à insulina</h4><p>Diagnóstico médico ou suspeito pelos exames</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q4','esteatose')">
+          <span class="opt-icon">🫀</span>
+          <div class="opt-text"><h4>Esteatose hepática (fígado gorduroso)</h4><p>Diagnosticada em ultrassom ou exames de sangue</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q4','tireoide')">
+          <span class="opt-icon">🦋</span>
+          <div class="opt-text"><h4>Alteração na tireoide</h4><p>TSH alterado, hipotireoidismo ou suspeita</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q4','nenhum')">
+          <span class="opt-icon">❓</span>
+          <div class="opt-text"><h4>Não sei ou não tenho diagnóstico</h4><p>Ainda não investiguei a fundo</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+      </div>
+      <button class="btn-next" id="btn-q4" disabled onclick="nextStep(5)">Próxima →</button>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-step" id="q5">
+      <button class="btn-back" onclick="prevStep(4)">← Voltar</button>
+      <div class="q-label">Passo 5</div>
+      <h2 class="q-title">Qual é o seu objetivo principal agora?</h2>
+      <p class="q-sub">Isso vai me ajudar a direcionar o que é mais importante para você dentro do Clube SOS da SOP.</p>
+      <div class="options-grid">
+        <button class="opt" onclick="selectOpt(this,'q5','engravidar')">
+          <span class="opt-icon">🤱</span>
+          <div class="opt-text"><h4>Engravidar com SOP</h4><p>Quero me preparar para a maternidade</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q5','emagrecer')">
+          <span class="opt-icon">🔥</span>
+          <div class="opt-text"><h4>Emagrecer com estratégia</h4><p>Sem cortar tudo e sem sofrimento</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q5','ciclo')">
+          <span class="opt-icon">📅</span>
+          <div class="opt-text"><h4>Regularizar o ciclo menstrual</h4><p>Quero entender e controlar meu ciclo</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+        <button class="opt" onclick="selectOpt(this,'q5','sintomas')">
+          <span class="opt-icon">🌟</span>
+          <div class="opt-text"><h4>Controlar os sintomas e me sentir bem</h4><p>Acne, pelos, cansaço, humor — quero qualidade de vida</p></div>
+          <div class="opt-check">✓</div>
+        </button>
+      </div>
+      <button class="btn-next" id="btn-q5" disabled onclick="showResult()">Ver meu Raio-X →</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- RESULT -->
+<section class="result-section" id="result">
+  <div class="container">
+
+    <div class="result-hero">
+      <div class="result-badge">Seu Raio-X SOMP está pronto 🛟</div>
+      <h2 id="resultTitle">Fenótipo A — <em>SOP Clássica</em></h2>
+      <p id="resultDesc">Seu perfil combina hiperandrogenismo com ciclo irregular — o fenótipo mais comum da SOP.</p>
+    </div>
+
+    <!-- O que é -->
+    <div class="result-card">
+      <div class="rc-head">
+        <div class="rc-icon" style="background:var(--rose2);">🔬</div>
+        <div><h3>O que isso significa?</h3><div class="rc-sub">Entenda o seu fenótipo</div></div>
+      </div>
+      <div id="resultWhat" style="font-size:14px;color:var(--muted);line-height:1.75;"></div>
+    </div>
+
+    <!-- Desafios -->
+    <div class="result-card">
+      <div class="rc-head">
+        <div class="rc-icon" style="background:#FFF0F0;">⚠️</div>
+        <div><h3>Desafios que você pode enfrentar</h3><div class="rc-sub">Baseado no seu perfil</div></div>
+      </div>
+      <ul class="rc-list" id="resultChallenges"></ul>
+    </div>
+
+    <!-- Soluções -->
+    <div class="result-card">
+      <div class="rc-head">
+        <div class="rc-icon" style="background:var(--green2);">✅</div>
+        <div><h3>Por onde começar</h3><div class="rc-sub">Estratégias para o seu perfil</div></div>
+      </div>
+      <ul class="rc-list" id="resultSolutions"></ul>
+    </div>
+
+    <!-- CLUBE SECTION -->
+    <div style="margin-top:3rem;">
+
+      <!-- Ponte emocional -->
+      <div style="background:linear-gradient(135deg,var(--rose2),var(--creme2));border-radius:20px;padding:2rem 1.75rem;margin-bottom:1.5rem;border:1px solid var(--rose);">
+        <div class="q-label" style="text-align:center;margin-bottom:.75rem;">Mas saber o fenótipo é só o começo</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,3.5vw,1.8rem);font-weight:700;color:var(--vinho);text-align:center;line-height:1.35;margin-bottom:1rem;">
+          Saber o nome não resolve.<br>O que muda de verdade é saber <em style="font-style:italic;">exatamente o que fazer.</em>
+        </p>
+        <p style="font-size:14px;color:var(--muted);text-align:center;line-height:1.75;max-width:520px;margin:0 auto;">
+          O que comer, quando comer, quais exames pedir, como interpretar os resultados, como montar a sua dieta — para o <strong style="color:var(--vinho);">seu fenótipo, os seus sintomas e o seu objetivo.</strong> Sem dieta genérica. Sem achismo. Sem se sentir sozinha nisso.
+        </p>
+      </div>
+
+      <!-- O que ela vai conquistar -->
+      <div style="background:#fff;border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;border:1px solid var(--rose);">
+        <div class="q-label" style="margin-bottom:.75rem;">O que você vai conquistar</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:.65rem;background:var(--green2);border-radius:12px;">
+            <span style="font-size:1.1rem;flex-shrink:0;">✅</span>
+            <span style="font-size:13.5px;color:#1E6B3F;line-height:1.5;font-weight:600;">Montar a sua própria dieta — para o seu fenótipo, do seu jeito</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:.65rem;background:var(--green2);border-radius:12px;">
+            <span style="font-size:1.1rem;flex-shrink:0;">✅</span>
+            <span style="font-size:13.5px;color:#1E6B3F;line-height:1.5;font-weight:600;">Entender os seus exames sem precisar de médico para traduzir</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:.65rem;background:var(--green2);border-radius:12px;">
+            <span style="font-size:1.1rem;flex-shrink:0;">✅</span>
+            <span style="font-size:13.5px;color:#1E6B3F;line-height:1.5;font-weight:600;">Regularizar o ciclo com estratégia alimentar — sem remédio</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:.65rem;background:var(--green2);border-radius:12px;">
+            <span style="font-size:1.1rem;flex-shrink:0;">✅</span>
+            <span style="font-size:13.5px;color:#1E6B3F;line-height:1.5;font-weight:600;">Emagrecer com estratégia — sem cortar tudo e sem sofrimento</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:.65rem;background:var(--green2);border-radius:12px;">
+            <span style="font-size:1.1rem;flex-shrink:0;">✅</span>
+            <span style="font-size:13.5px;color:#1E6B3F;line-height:1.5;font-weight:600;">Preparar o corpo para engravidar com consciência e estratégia</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:.65rem;background:var(--green2);border-radius:12px;">
+            <span style="font-size:1.1rem;flex-shrink:0;">✅</span>
+            <span style="font-size:13.5px;color:#1E6B3F;line-height:1.5;font-weight:600;">Parar de se sentir perdida — porque vai ter um mapa só seu</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- O que é o Clube -->
+      <div style="background:linear-gradient(160deg,#5A0F1E,#A32840);border-radius:20px;padding:2rem 1.75rem;margin-bottom:1.5rem;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(201,149,106,.12),transparent 65%);"></div>
+        <div class="q-label" style="color:var(--ouro2);margin-bottom:.75rem;position:relative;">Conheça</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:700;color:#fff;margin-bottom:.75rem;position:relative;line-height:1.15;">
+          🛟 Clube SOS da SOP
+        </h3>
+        <p style="font-size:14.5px;color:rgba(255,255,255,.75);line-height:1.8;max-width:500px;margin:0 auto;position:relative;">
+          O único lugar onde você encontra <strong style="color:var(--ouro2);">tudo sobre SOMP (a antiga SOP) em um só lugar</strong> — do básico ao avançado, com linguagem que você entende, estratégias que funcionam e materiais para usar no dia a dia. Criado pela Nutri Nívea Pessôa exclusivamente para mulheres com SOP.
+        </p>
+      </div>
+
+      <!-- Módulos com o que tem dentro -->
+      <div class="q-label" style="text-align:center;margin-bottom:.5rem;">O que tem dentro</div>
+      <h3 class="modules-title" style="margin-bottom:.5rem;">Cada módulo feito<br>para a sua realidade</h3>
+      <p class="modules-sub">Não é conteúdo genérico da internet. É informação construída para quem tem SOP — em linguagem simples, do jeito que você merece receber. A SOMP é a nova nomenclatura oficial da SOP — e aqui você encontra tudo atualizado.</p>
+      <div class="modules-grid" id="resultModules"></div>
+
+      <!-- Materiais -->
+      <div style="background:#fff;border-radius:20px;padding:1.75rem;margin-top:1rem;border:1px solid var(--rose);">
+        <div class="q-label" style="margin-bottom:.75rem;">Além das aulas, você também recebe</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">
+          <div style="display:flex;gap:10px;align-items:center;padding:.75rem;background:var(--creme2);border-radius:12px;">
+            <span style="font-size:1.3rem;">🧮</span>
+            <div><div style="font-size:13px;font-weight:700;color:var(--vinho);">Calculadoras interativas</div><div style="font-size:12px;color:var(--muted);">Calorias e macros para o seu perfil</div></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;padding:.75rem;background:var(--creme2);border-radius:12px;">
+            <span style="font-size:1.3rem;">📋</span>
+            <div><div style="font-size:13px;font-weight:700;color:var(--vinho);">Cardápios por sintoma</div><div style="font-size:12px;color:var(--muted);">Prontos para usar ou adaptar</div></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;padding:.75rem;background:var(--creme2);border-radius:12px;">
+            <span style="font-size:1.3rem;">📄</span>
+            <div><div style="font-size:13px;font-weight:700;color:var(--vinho);">Guias imprimíveis</div><div style="font-size:12px;color:var(--muted);">PDFs para levar para a consulta</div></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;padding:.75rem;background:var(--creme2);border-radius:12px;">
+            <span style="font-size:1.3rem;">🧪</span>
+            <div><div style="font-size:13px;font-weight:700;color:var(--vinho);">Guia de exames completo</div><div style="font-size:12px;color:var(--muted);">Com valores ideais — não só os do lab</div></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;padding:.75rem;background:var(--creme2);border-radius:12px;">
+            <span style="font-size:1.3rem;">🗓️</span>
+            <div><div style="font-size:13px;font-weight:700;color:var(--vinho);">Planner semanal de hábitos</div><div style="font-size:12px;color:var(--muted);">Sono, exercício e alimentação juntos</div></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;padding:.75rem;background:var(--creme2);border-radius:12px;">
+            <span style="font-size:1.3rem;">🤱</span>
+            <div><div style="font-size:13px;font-weight:700;color:var(--vinho);">Diário de ciclo para tentantes</div><div style="font-size:12px;color:var(--muted);">Acompanhe ovulação e sintomas</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Frase de fechamento emocional -->
+      <div style="text-align:center;padding:2rem 1rem;margin-top:1.5rem;">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,1.6rem);font-weight:700;color:var(--vinho);line-height:1.5;max-width:500px;margin:0 auto;">
+          "SOP não é sentença. É um sinal que o seu corpo está pedindo cuidado.<br>
+          <em style="font-style:italic;color:var(--ouro);">E agora você tem um lugar feito exatamente para isso.</em>"
+        </p>
+        <p style="font-size:13px;color:var(--muted);margin-top:.75rem;">— Nutri Nívea Pessôa</p>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-box">
+      <h2>Quer ser a primeira<br>a <em>saber quando abrir?</em></h2>
+      <p>Entre na lista de espera do Clube SOS da SOP. Quando as vagas abrirem, você vai saber antes de todo mundo — com condição especial de lançamento.</p>
+      <a href="https://forms.gle/RvxMDRLJroy74Aju8" target="_blank" class="btn-cta">🛟 Quero entrar na lista de espera</a>
+      <div class="cta-note">Gratuito para se cadastrar · Sem compromisso</div>
+    </div>
+
+    <div class="guarantee">
+      <span class="g-icon">🎟️</span>
+      <p><strong>Bônus especial:</strong> Quem entrar na lista de espera garante o valor especial de lançamento e participa do sorteio mensal de uma consulta online com a Nutri Nívea Pessôa.</p>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <strong>SOS da SOP</strong> · Nutri Nívea Pessôa · Conteúdo educativo · Não substitui acompanhamento profissional
+</footer>
+
+<script>
+// ═══════════════════════════════
+// QUIZ STATE
+// ═══════════════════════════════
+const answers = {};
+
+function selectOpt(el, step, val) {
+  // For q2, q3 allow multiple; others single
+  const multi = ['q2','q3'].includes(step);
+  const parent = el.closest('.options-grid');
+
+  if (!multi) {
+    parent.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+    answers[step] = val;
+  } else {
+    el.classList.toggle('selected');
+    if (!answers[step]) answers[step] = [];
+    if (el.classList.contains('selected')) {
+      if (!answers[step].includes(val)) answers[step].push(val);
+    } else {
+      answers[step] = answers[step].filter(v => v !== val);
+    }
+  }
+
+  if (!multi) el.classList.add('selected');
+  document.getElementById('btn-' + step).disabled = false;
+}
+
+function nextStep(n) {
+  document.querySelectorAll('.q-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('q' + n).classList.add('active');
+  const pct = (n / 5) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = 'Pergunta ' + n + ' de 5';
+  document.getElementById('progressPct').textContent = Math.round(pct) + '%';
+  window.scrollTo({ top: document.getElementById('quiz').offsetTop - 20, behavior: 'smooth' });
+}
+
+function prevStep(n) {
+  document.querySelectorAll('.q-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('q' + n).classList.add('active');
+  const pct = (n / 5) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = 'Pergunta ' + n + ' de 5';
+  document.getElementById('progressPct').textContent = Math.round(pct) + '%';
+  window.scrollTo({ top: document.getElementById('quiz').offsetTop - 20, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════
+// RESULT DATA
+// ═══════════════════════════════
+const profiles = {
+  A: {
+    title: 'Fenótipo A — <em>SOMP Clássica</em>',
+    desc: 'Seu perfil combina hiperandrogenismo com ciclo irregular e ovários policísticos — o fenótipo mais completo da SOMP. Isso significa que os hormônios masculinos estão elevados E o ciclo está desregulado.',
+    what: 'A SOMP Clássica (Fenótipo A) é a mais comum e a que mais responde ao tratamento nutricional. Você tem os três pilares da síndrome juntos: excesso de andrógenos (testosterona, etc.), ciclo irregular ou ausente e ovários com muitos folículos. A boa notícia é que exatamente por ser o fenótipo mais estudado, há muito que a alimentação pode fazer por você.',
+    challenges: [
+      { icon: '🍬', text: 'Resistência à insulina frequente — dificuldade de emagrecer, barriga baixa e vontade constante de doce' },
+      { icon: '😔', text: 'Acne, oleosidade e pelos em excesso causados pela testosterona elevada' },
+      { icon: '📅', text: 'Ciclo imprevisível que dificulta planejamento e controle da fertilidade' },
+      { icon: '😴', text: 'Cansaço crônico e alterações de humor ligados ao desequilíbrio hormonal' },
+    ],
+    solutions: [
+      { icon: '🥗', text: 'Nunca coma carboidrato sozinho — sempre com proteína e gordura boa para controlar a insulina' },
+      { icon: '🍳', text: 'Inclua ovos inteiros todo dia (colina + vitamina D para o folículo)' },
+      { icon: '🌿', text: 'Canela e cacau 70%+ são antioxidantes uterinos poderosos — use diariamente' },
+      { icon: '🩺', text: 'Peça: glicemia, insulina em jejum e pós-prandial, testosterona, SHBG e LH/FSH' },
+      { icon: '💊', text: 'Investigue a tireoide: TSH acima de 2,5 já interfere no ciclo — mesmo dentro do "normal"' },
+    ],
+  },
+  B: {
+    title: 'Fenótipo B — <em>SOMP com Hiperandrogenismo</em>',
+    desc: 'Seu perfil tem excesso de andrógenos com ovários policísticos, mas com ciclo presente. Os hormônios masculinos estão elevados e isso é o que mais te incomoda.',
+    what: 'No Fenótipo B da SOMP, o ciclo menstrual ainda aparece, mas os andrógenos elevados causam os sintomas visíveis que mais incomodam: acne, pelos, queda de cabelo e oleosidade. A alimentação tem um papel fundamental em reduzir esses hormônios masculinos de forma natural.',
+    challenges: [
+      { icon: '😔', text: 'Acne hormonal persistente especialmente no queixo, mandíbula e costas' },
+      { icon: '💇', text: 'Queda de cabelo progressiva e pelos em excesso no rosto e corpo' },
+      { icon: '🔥', text: 'Dificuldade de emagrecer mesmo com ciclo presente' },
+      { icon: '🧪', text: 'Exames de testosterona e SHBG desregulados' },
+    ],
+    solutions: [
+      { icon: '🐟', text: 'Ômega-3 diariamente — reduz testosterona e aumenta SHBG (sardinha, salmão, chia)' },
+      { icon: '🥜', text: 'Zinco todos os dias — anti-androgênico natural (frutos do mar, sementes de abóbora, carnes)' },
+      { icon: '🥛', text: 'Reduza laticínios — estimulam IGF-1 que piora acne e oleosidade' },
+      { icon: '🩺', text: 'Peça: testosterona total e livre, SHBG, FAI, DHEAS e prolactina' },
+      { icon: '🌿', text: 'Chá de hortelã 2x ao dia — evidência de redução de testosterona livre na SOP' },
+    ],
+  },
+  C: {
+    title: 'Fenótipo C — <em>SOMP Ovulatória</em>',
+    desc: 'Seu perfil tem hiperandrogenismo com ovários policísticos, mas com ciclos ovulatórios. É o fenótipo mais leve da SOMP, mas ainda precisa de atenção e estratégia.',
+    what: 'No Fenótipo C da SOMP, você ovula — o que é ótimo — mas ainda tem excesso de andrógenos e ovários policísticos. Isso significa que os sintomas visíveis (acne, pelos) aparecem, mas o ciclo tende a ser mais regular. A estratégia aqui é manter o que está funcionando e trabalhar os andrógenos.',
+    challenges: [
+      { icon: '😔', text: 'Sintomas androgênicos presentes mesmo com ciclo mais regular' },
+      { icon: '⚡', text: 'Risco de piora do quadro com estresse, dieta ruim ou ganho de peso' },
+      { icon: '🔬', text: 'Diagnóstico muitas vezes tardio por ter ciclo aparentemente "normal"' },
+      { icon: '😰', text: 'TPM intensa e alterações de humor na fase lútea' },
+    ],
+    solutions: [
+      { icon: '🥗', text: 'Alimentação anti-inflamatória como base — azeite, frutas vermelhas, cúrcuma, gengibre' },
+      { icon: '🏋️', text: 'Exercício de força 2-3x por semana — melhora sensibilidade à insulina e reduz andrógenos' },
+      { icon: '😴', text: 'Priorize o sono — cortisol alto à noite piora os andrógenos' },
+      { icon: '🩺', text: 'Peça: LH/FSH, testosterona, AMH e progesterona na fase lútea' },
+      { icon: '🌿', text: 'Magnésio diariamente — reduz TPM e apoia o equilíbrio hormonal' },
+    ],
+  },
+  D: {
+    title: 'Fenótipo D — <em>SOMP Não Androgênica</em>',
+    desc: 'Seu perfil tem ciclo irregular e ovários policísticos, mas sem os sinais visíveis de excesso de andrógenos. É o fenótipo menos comum da SOMP e mais frequentemente ignorado.',
+    what: 'O Fenótipo D da SOMP é o mais silencioso — sem acne, sem pelos, sem queda de cabelo visível. Mas o ciclo irregular e os ovários policísticos estão lá. Muitas vezes é descoberto tarde, justamente por não ter os sinais "clássicos". A causa mais comum aqui é o desequilíbrio do eixo hipotálamo-hipófise — que pode estar sendo afetado por estresse, restrição alimentar ou alteração tireoidiana.',
+    challenges: [
+      { icon: '📅', text: 'Ciclo irregular ou ausente sem uma causa óbvia — o que confunde muito' },
+      { icon: '🦋', text: 'Alta probabilidade de alteração tireoidiana associada — investigar é essencial' },
+      { icon: '🍽️', text: 'Histórico de dietas restritivas que podem ter desregulado o eixo hormonal' },
+      { icon: '🤱', text: 'Dificuldade de engravidar por anovulação mesmo sem sintomas clássicos' },
+    ],
+    solutions: [
+      { icon: '🦋', text: 'Investigue a tireoide AGORA: TSH, T3 livre, T4 livre, Anti-TPO e Anti-Tireoglobulina' },
+      { icon: '🍽️', text: 'Não faça restrição calórica severa — isso desliga a ovulação como mecanismo de defesa' },
+      { icon: '🥚', text: 'Gorduras boas são a matéria-prima dos hormônios — azeite, ovos, abacate, peixes todos os dias' },
+      { icon: '🌙', text: 'Sono de qualidade é prioridade — regula diretamente o eixo hormonal' },
+      { icon: '🩺', text: 'Peça: FSH, LH, prolactina, TSH completo e progesterona na fase lútea' },
+    ],
+  },
+  tentante: {
+    title: 'Perfil Tentante — <em>SOMP e Fertilidade</em>',
+    desc: 'Você quer engravidar e tem SOMP. Esse é o momento mais importante para entender e preparar o seu corpo — e tem muito que a alimentação pode fazer antes mesmo de qualquer intervenção médica.',
+    what: 'A SOMP não impede a gravidez. Mas ela pede preparo. A maioria das mulheres começa a tentar sem antes corrigir os déficits nutricionais, a resistência à insulina e o desequilíbrio hormonal — e aí fica meses sem resultado sem entender o porquê. Com a estratégia certa, mulheres com SOP engravidam. Isso é real.',
+    challenges: [
+      { icon: '📅', text: 'Anovulação — sem ovulação, não há gravidez natural' },
+      { icon: '💊', text: 'Deficiências de vitamina D, ácido fólico, ferro e zinco que comprometem a implantação' },
+      { icon: '🧬', text: 'Homocisteína elevada associada a aborto de repetição — quase nunca investigada' },
+      { icon: '🦋', text: 'TSH acima de 2,5 interfere na ovulação — mesmo dentro do "normal" do laboratório' },
+    ],
+    solutions: [
+      { icon: '🥚', text: 'Ovos inteiros todo dia — colina para o desenvolvimento folicular e vitamina D para a progesterona' },
+      { icon: '🍠', text: 'Inhame 3-4x por semana — diosgenina com suporte natural à produção de progesterona' },
+      { icon: '🍋', text: 'Vitamina C todos os dias — acerola, kiwi, pimentão — favorece o desenvolvimento do folículo' },
+      { icon: '🩺', text: 'Peça: vitamina D, ferritina, ácido fólico, B12, homocisteína e painel completo da tireoide' },
+      { icon: '🌿', text: 'Chá de folha de framboesa na fase lútea (dia 15 ao 28) — apoia a produção de progesterona' },
+    ],
+  },
+};
+
+const modulesByProfile = {
+  A: [
+    { icon:'🌀', tag:'Módulo 1', title:'O que é este trem de SOP', badge:'Essencial', inside:[
+      '✦ O que é a SOP e por que o seu corpo age assim',
+      '✦ Calculadora para descobrir o seu tipo de SOP',
+      '✦ Por que a dieta da sua amiga não funciona para você',
+    ]},
+    { icon:'🥗', tag:'Módulo 2', title:'Como montar a minha dieta', badge:'Essencial', inside:[
+      '✦ Passo a passo para montar a sua dieta do zero',
+      '✦ Como combinar proteínas, carboidratos e gorduras',
+      '✦ Calculadora de calorias e macros personalizada',
+      '✦ Modelo de cardápio semanal imprimível',
+    ]},
+    { icon:'🔥', tag:'Módulo 3', title:'Emagrecimento', badge:'Popular', inside:[
+      '✦ Cálculo específico para emagrecer com SOP',
+      '✦ Como fazer exceções sem sabotar o resultado',
+      '✦ Como lidar com a vontade de doce — sem culpa',
+      '✦ Guia de medidas corporais para acompanhar o progresso',
+    ]},
+    { icon:'🩺', tag:'Módulo 5', title:'Sintomas — RI, Ciclo, Acne e mais', badge:'Essencial', inside:[
+      '✦ Resistência à insulina: o que comer e o que evitar',
+      '✦ Ciclo irregular e ausência de menstruação',
+      '✦ Acne hormonal e pelos em excesso',
+      '✦ Fluxo intenso e cólica — estratégia alimentar',
+      '✦ Guia por sintoma com nutrientes e fontes alimentares',
+    ]},
+    { icon:'🧪', tag:'Módulo 8', title:'Exames', badge:'Diferencial único', inside:[
+      '✦ Lista de exames essenciais para SOP',
+      '✦ Valores ideais — diferentes dos valores do laboratório',
+      '✦ O que cada resultado significa para você',
+      '✦ Como chegar na consulta sabendo o que perguntar',
+    ]},
+  ],
+  B: [
+    { icon:'🌀', tag:'Módulo 1', title:'O que é este trem de SOP', badge:'Essencial', inside:[
+      '✦ Fenótipo B explicado do jeito simples',
+      '✦ Por que o hiperandrogenismo afeta tudo',
+      '✦ Calculadora de tipo de SOP',
+    ]},
+    { icon:'🩺', tag:'Módulo 5', title:'Sintomas — Acne, Pelos e Queda', badge:'Essencial', inside:[
+      '✦ Estratégia nutricional anti-androgênica para acne',
+      '✦ O que comer para reduzir pelos em excesso',
+      '✦ Nutrientes para fortalecer o cabelo e reduzir a queda',
+      '✦ O que evitar que piora o hiperandrogenismo',
+    ]},
+    { icon:'🥗', tag:'Módulo 2', title:'Como montar a minha dieta', badge:'Popular', inside:[
+      '✦ Alimentação anti-inflamatória e anti-androgênica no dia a dia',
+      '✦ Calculadora de calorias e macros',
+      '✦ Cardápio modelo e lista de substituições',
+    ]},
+    { icon:'💊', tag:'Módulo 6', title:'Medicações e Suplementos', badge:'Diferencial', inside:[
+      '✦ Medicações mais prescritas e como agem no corpo',
+      '✦ Suplementos com evidência para reduzir andrógenos',
+      '✦ Tabela de suplementos com doses — o que vale a pena',
+    ]},
+    { icon:'🧪', tag:'Módulo 8', title:'Exames', badge:'Diferencial único', inside:[
+      '✦ Testosterona, SHBG e FAI — o que significam',
+      '✦ Valores ideais para hiperandrogenismo',
+      '✦ Como chegar preparada na consulta',
+    ]},
+  ],
+  C: [
+    { icon:'🌀', tag:'Módulo 1', title:'O que é este trem de SOP', badge:'Essencial', inside:[
+      '✦ Fenótipo C — o mais silencioso e menos diagnosticado',
+      '✦ Por que você tem SOP mesmo com ciclo mais regular',
+      '✦ Calculadora de tipo de SOP',
+    ]},
+    { icon:'🥗', tag:'Módulo 2', title:'Como montar a minha dieta', badge:'Popular', inside:[
+      '✦ Alimentação anti-inflamatória como base',
+      '✦ Calculadora de calorias e macros',
+      '✦ Cardápio modelo imprimível',
+    ]},
+    { icon:'📅', tag:'Módulo 4', title:'Ciclo Menstrual', badge:'Essencial', inside:[
+      '✦ As fases do ciclo explicadas de forma simples',
+      '✦ Como alinhar sua alimentação com cada fase',
+      '✦ Como identificar onde você está no ciclo',
+      '✦ Guia interativo com gráfico de hormônios',
+    ]},
+    { icon:'🌟', tag:'Módulo 7', title:'Segredos para viver bem com SOP', badge:'Essencial', inside:[
+      '✦ Exercício que ajuda — e o que atrapalha',
+      '✦ Sono e cortisol: por que dormir mal piora tudo',
+      '✦ Como lidar com o estresse sem piorar os hormônios',
+      '✦ Planner semanal de hábitos imprimível',
+    ]},
+    { icon:'💊', tag:'Módulo 6', title:'Medicações e Suplementos', badge:'Diferencial', inside:[
+      '✦ Suplementos com evidência para o fenótipo C',
+      '✦ O que vale a pena e o que é propaganda',
+      '✦ Tabela de doses e indicações',
+    ]},
+  ],
+  D: [
+    { icon:'🌀', tag:'Módulo 1', title:'O que é este trem de SOP', badge:'Essencial', inside:[
+      '✦ Fenótipo D explicado: por que o ciclo some sem sinais clássicos',
+      '✦ A conexão que quase ninguém faz: SOP e tireoide',
+      '✦ Calculadora de tipo de SOP',
+    ]},
+    { icon:'🩺', tag:'Módulo 5', title:'Sintomas — Ausência de Menstruação', badge:'Essencial', inside:[
+      '✦ O que impede o ciclo de acontecer',
+      '✦ Estratégia alimentar para estimular a ovulação',
+      '✦ Por que restringir demais desliga o ciclo',
+      '✦ Alimentos que apoiam a produção de progesterona',
+    ]},
+    { icon:'🥗', tag:'Módulo 2', title:'Como montar a minha dieta', badge:'Popular', inside:[
+      '✦ Como comer para nutrir o eixo hormonal',
+      '✦ Calculadora de calorias e macros',
+      '✦ Cardápio modelo e guia de substituições',
+    ]},
+    { icon:'🧪', tag:'Módulo 8', title:'Exames', badge:'Diferencial único', inside:[
+      '✦ Painel completo para o fenótipo D',
+      '✦ Tireoide: os valores que realmente importam para tentantes e para o ciclo',
+      '✦ Progesterona, prolactina e FSH — o que olhar',
+    ]},
+    { icon:'🌟', tag:'Módulo 7', title:'Segredos para viver bem com SOP', badge:'Essencial', inside:[
+      '✦ Sono e cortisol — pilares do ciclo menstrual',
+      '✦ Exercício que apoia os hormônios sem estressar o corpo',
+      '✦ Planner semanal de hábitos imprimível',
+    ]},
+  ],
+  tentante: [
+    { icon:'🤱', tag:'Módulo 9', title:'Tentantes', badge:'Módulo Exclusivo', inside:[
+      '✦ Como engravidar com SOP — o que preparar antes de tentar',
+      '✦ Cardápio pré-concepção específico para SOP',
+      '✦ Diário de ciclo para tentantes — acompanhe ovulação e sintomas',
+      '✦ Checklist completo pré-concepção',
+      '✦ Nutrientes essenciais antes de engravidar e como obtê-los',
+    ]},
+    { icon:'🥗', tag:'Módulo 2', title:'Como montar a minha dieta', badge:'Essencial', inside:[
+      '✦ Monte a dieta ideal para preparar o corpo para a gravidez',
+      '✦ Calculadora de calorias e macros',
+      '✦ Cardápio modelo e guia de substituições',
+    ]},
+    { icon:'🩺', tag:'Módulo 5', title:'Sintomas — RI, Ciclo e Ausência', badge:'Essencial', inside:[
+      '✦ Corrija a resistência à insulina antes de tentar',
+      '✦ Estratégia para regularizar o ciclo e favorecer a ovulação',
+      '✦ Alimentos que apoiam a produção de progesterona',
+    ]},
+    { icon:'🧪', tag:'Módulo 8', title:'Exames para Tentantes', badge:'Diferencial único', inside:[
+      '✦ Quais exames pedir antes de tentar engravidar',
+      '✦ Vitamina D, ferritina, homocisteína — valores que importam',
+      '✦ Tireoide: TSH ideal para tentantes é diferente do "normal"',
+      '✦ Como chegar preparada na consulta com seu ginecologista',
+    ]},
+    { icon:'📅', tag:'Módulo 4', title:'Ciclo Menstrual', badge:'Popular', inside:[
+      '✦ Entenda as fases do ciclo para identificar a ovulação',
+      '✦ Como a alimentação muda em cada fase',
+      '✦ Guia interativo com gráfico de hormônios',
+    ]},
+  ],
+};
+
+// ═══════════════════════════════
+// DETERMINE PROFILE
+// ═══════════════════════════════
+function determineProfile() {
+  const q1 = answers.q1;
+  const q2 = answers.q2 || [];
+  const q5 = answers.q5;
+
+  // Tentante override
+  if (q5 === 'engravidar') return 'tentante';
+
+  const hasAndrogen = Array.isArray(q2)
+    ? q2.some(v => ['acne','pelos','queda'].includes(v))
+    : ['acne','pelos','queda'].includes(q2);
+
+  if (hasAndrogen && (q1 === 'irregular' || q1 === 'ausente')) return 'A';
+  if (hasAndrogen && q1 === 'regular') return 'B';
+  if (hasAndrogen && q1 === 'intenso') return 'C';
+  if (!hasAndrogen && (q1 === 'irregular' || q1 === 'ausente')) return 'D';
+  if (q1 === 'intenso') return 'C';
+  return 'A'; // default
+}
+
+// ═══════════════════════════════
+// SHOW RESULT
+// ═══════════════════════════════
+function showResult() {
+  const profile = determineProfile();
+  const data = profiles[profile];
+  const mods = modulesByProfile[profile];
+
+  document.getElementById('resultTitle').innerHTML = data.title;
+  document.getElementById('resultDesc').textContent = data.desc;
+  document.getElementById('resultWhat').textContent = data.what;
+
+  const chal = document.getElementById('resultChallenges');
+  chal.innerHTML = data.challenges.map(c =>
+    `<li data-icon="${c.icon}">${c.text}</li>`
+  ).join('');
+
+  const sol = document.getElementById('resultSolutions');
+  sol.innerHTML = data.solutions.map(s =>
+    `<li data-icon="${s.icon}">${s.text}</li>`
+  ).join('');
+
+  const modGrid = document.getElementById('resultModules');
+  modGrid.innerHTML = mods.map(m => `
+    <div class="mod-card">
+      <span class="mod-icon">${m.icon}</span>
+      <div class="mod-tag">${m.tag} · ${m.badge}</div>
+      <h4 style="margin-top:.4rem;margin-bottom:.5rem;">${m.title}</h4>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        ${m.inside.map(i => `<div style="font-size:11.5px;color:var(--muted);line-height:1.5;">${i}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('quiz').style.display = 'none';
+  const rs = document.getElementById('result');
+  rs.classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
